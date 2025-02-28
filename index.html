@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background-image: url('https://images.unsplash.com/photo-1535350356005-fd52b3b524fb?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGRlc2lnbiUyMHdhbGxwYXBlcnxlbnwwfHwwfHx8MA%3D%3D');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            position: relative;
+        }
+        .line {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            width: 5px;
+            height: 100%;
+            background-color: black;
+        }
+        .centered-form {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 50%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        h1 {
+            color: rgb(0, 0, 0);
+            font-size: 50px;
+            font-family: 'Arial';
+            margin-top: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: inset 0 0 10px #000000;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+        }
+        label, input, textarea {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .mini-window {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 300px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 10px #000;
+            border-radius: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="line"></div>
+    <div class="centered-form">
+        <h1>
+            <i>
+                <b>
+                    FORMULARIO 
+                </b>
+
+              
+            </i>
+        </h1>
+        <form id="productForm">
+            <label for="fname">Nombre Completo:</label>
+            <input type="text" id="fname" name="fname" autofocus>
+            <label for="precio">Precio:</label>
+            <input type="text" id="precio" name="precio">
+            <label for="cantidad">Cantidad:</label>
+            <input type="number" id="cantidad" name="cantidad">
+            <label for="descripcion">Descripción:</label>
+            <textarea id="descripcion" name="descripcion" rows="4" cols="50"></textarea>
+            <input type="button" value="Comprar" onclick="showMiniWindow()">
+        </form>
+    </div>
+    <div id="miniWindowsContainer"></div>
+    <script>
+        function showMiniWindow() {
+            var fname = document.getElementById('fname').value;
+            var precio = document.getElementById('precio').value;
+            var cantidad = document.getElementById('cantidad').value;
+            var descripcion = document.getElementById('descripcion').value;
+
+            var product = {
+                fname: fname,
+                precio: precio,
+                cantidad: cantidad,
+                descripcion: descripcion
+            };
+
+            saveProduct(product);
+            displayProduct(product);
+            clearForm();
+        }
+
+     
+        
+        
+
+        function saveProduct(product) {
+            var products = JSON.parse(localStorage.getItem('products')) || [];
+            products.push(product);
+            localStorage.setItem('products', JSON.stringify(products));
+        }
+
+        function displayProduct(product) {
+            var miniWindowsContainer = document.getElementById('miniWindowsContainer');
+            miniWindowsContainer.innerHTML = ''; 
+
+            var miniWindow = document.createElement('div');
+            miniWindow.className = 'mini-window';
+            miniWindow.innerHTML = `
+                <h2>INFORMACION DE PRODUCTO</h2>
+                <p><strong>Nombre Completo:</strong> ${product.fname}</p>
+                <p><strong>Precio:</strong> ${product.precio}</p>
+                <p><strong>Cantidad:</strong> ${product.cantidad}</p>
+                <p><strong>Descripción:</strong> ${product.descripcion}</p>
+            `;
+            miniWindowsContainer.appendChild(miniWindow);
+            miniWindow.style.display = 'block';
+        }
+
+        
+        function loadProducts() {
+            var products = JSON.parse(localStorage.getItem('products')) || [];
+            if (products.length > 0) {
+                displayProduct(products[products.length - 1]);
+            }
+        }
+
+        function clearForm() {
+            document.getElementById('productForm').reset();
+        }
+
+        window.onload = loadProducts;
+    </script>
+</body>
+</html>
